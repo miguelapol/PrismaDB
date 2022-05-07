@@ -21,6 +21,37 @@ app.get('/explorers/:id', async (req, res) => {
     const explorer = await prisma.explorer.findUnique({where: {id: parseInt(id)}});
     res.json(explorer);
 });
+//Aqui creamos el explorers
+app.post('/explorers', async (req, res) => {
+    const explorer={
+        name: req.body.name,
+        username: req.body.username,
+        mission: req.body.mission
+    };
+    const message = "Explorer created";
+    await prisma.explorer.create({data: explorer});
+    res.json({message});
+});
+//Aqui actualizamos el explorers la mision se actualizara el explorer
+app.put('/explorers/:id', async (req, res) => {
+    const id=parseInt(req.params.id);
+    await prisma.explorer.update({
+        where: {
+                id:id
+        },
+        data:{
+                mission: req.body.mission
+        }
+    })
+    return res.json({message: "Explorer updated"});
+});
+//Aqui eliminamos el explorers
+app.delete('/explorers/:id', async (req, res) => {
+    const id=parseInt(req.params.id);
+    await prisma.explorer.delete({where: {id:id}});
+    return res.json({message: "Explorer deleted"});
+})
+
 app.listen(port, () => {
   console.log(`Listening to requests on port ${port}`);
 });
